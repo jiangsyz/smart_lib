@@ -1,6 +1,6 @@
 #include "smart_shell.h"
 //=======================================
-bool sh_shell(string command){
+bool smart_lib::sh_shell(string command){
 	//打开管道,执行命令
 	auto popen_fd=popen(command.c_str(),"r"); 
 	if(!popen_fd) return false;
@@ -9,7 +9,7 @@ bool sh_shell(string command){
 	return true;
 }
 //=======================================
-bool sh_shell(string command,string &output){
+bool smart_lib::sh_shell(string command,string &output){
 	//初始化
 	output.assign("");
 	//打开管道

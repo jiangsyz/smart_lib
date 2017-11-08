@@ -5,7 +5,7 @@ g++ -g -gdwarf-2 -std=c++11 -o test test.cpp -I/smart_lib/smart_shell -L/smart_l
 #include <algorithm>
 #include <string.h>
 #include "smart_shell.h"
-using namespace std;
+using namespace smart_lib;
 //=======================================
 int main(){
 	string output;
