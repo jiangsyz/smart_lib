@@ -39,12 +39,14 @@ smart_mysql::smart_mysql(db_connection_conf conf){
 	connection=mysql_init(NULL);
 	//连接
 	if(!mysql_real_connect(connection,conf.host.c_str(),conf.user.c_str(),conf.pass.c_str(),conf.dbname.c_str(),0,NULL,0)) return;
-	//设置编码(设置错误关闭句柄,成功设置标识符)
-	if(mysql_query(connection,("SET NAMES "+conf.charset).c_str())) mysql_close(connection); else flag=true;
+	//更改状态为连接成功
+	state=1;
+	//设置编码,成功更改状态为设置编码成功
+	if(!mysql_query(connection,("SET NAMES "+conf.charset).c_str())) state=2;
 }
 //=======================================
 //释放数据库句柄
-smart_mysql::~smart_mysql(){if(connection) mysql_close(connection);}
+smart_mysql::~smart_mysql(){if(state>0) mysql_close(connection);}
 //=======================================
 //通过配置,获取相应的smart_mysql实例的智能指针,同一份配置单例
 shared_ptr<smart_mysql> smart_mysql::get_instance(db_connection_conf conf){
@@ -59,7 +61,9 @@ shared_ptr<smart_mysql> smart_mysql::get_instance(db_connection_conf conf){
 //执行sql语句
 query_result smart_mysql::query(string sql){
 	//smart_mysql不可用,返回带有错误信息的query_result
-	if(!flag) return query_result("error smart_mysql flag");
+	if(state==0) return query_result("smart_mysql connection error");
+	if(state==1) return query_result("smart_mysql set charset error");
+	if(state!=2) return query_result("smart_mysql state error");
 	//加锁
 	pthread_mutex_lock(&sql_mutex);
 	//执行sql

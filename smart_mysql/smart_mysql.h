@@ -48,8 +48,8 @@ namespace smart_lib{
 	//=======================================
 	class smart_mysql{
 		private:
-			//smart_mysql实例是否可用,true=可用,false=异常
-			bool flag{false};
+			//smart_mysql实例状态(0=未连接/1=已连接但未设置编码/2=设置编码成功可以执行sql)
+			int state{0};
 			//数据库句柄
 			MYSQL *connection{nullptr};
 		private:
