@@ -45,6 +45,10 @@ namespace smart_lib{
 			-1=线程数量超过上限制
 			*/
 			int add_smart_pthread();
+			//获取一个空闲的智能线程去执行任务
+			shared_ptr<smart_pthread> get_leisure_pthread();
+			//将一个完成任务的智能线程移动到空闲队列
+			void move_smart_pthread_to_leisure_list(shared_ptr<smart_pthread> busy_smart_pthread);
 	};
 }
 //=======================================

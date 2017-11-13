@@ -30,5 +30,33 @@ int smart_pthread_pool::add_smart_pthread(){
 	if(leisure_list.size()==1) pthread_cond_signal(&leisure_cond);
 	return 0;
 }
+//=======================================
+//获取一个空闲的智能线程去执行任务
+shared_ptr<smart_pthread> smart_pthread_pool::get_leisure_pthread(){
+	//锁定空闲队列
+	pthread_mutex_lock(&leisure_list_mutex);
+	//没有空闲队列则等待
+	while(leisure_list.size() == 0) pthread_cond_wait(&leisure_cond,&leisure_list_mutex);
+	//取到第一个空闲的智能线程
+	auto leisure_smart_pthread=leisure_list.front();
+	//删除出空闲队列
+	leisure_list.pop();
+	//解锁空闲队列
+	pthread_mutex_unlock(&leisure_list_mutex);
+	//返回智能线程
+	return leisure_smart_pthread;
+}
+//=======================================
+//将一个完成任务的智能线程移动到空闲队列
+void smart_pthread_pool::move_smart_pthread_to_leisure_list(shared_ptr<smart_pthread> busy_smart_pthread){
+	//锁定空闲队列
+	pthread_mutex_lock(&leisure_list_mutex);
+	//加入空闲队列
+	leisure_list.push(busy_smart_pthread);
+	//通知等待线程的任务
+	pthread_cond_signal(&leisure_cond);
+	//解锁空闲队列
+	pthread_mutex_unlock(&leisure_list_mutex);
+}
 
 

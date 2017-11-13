@@ -1,5 +1,6 @@
 //智能线程
 #include "smart_pthread.h"
+#include "smart_pthread_pool.h"
 using namespace smart_lib;
 //=======================================
 //构造
@@ -39,6 +40,19 @@ void smart_pthread::wait(){
 	pthread_mutex_lock(&smart_pthread_mutex);
 	//等待任务或等待被线程池通知销毁
 	while(!my_job && !stop) pthread_cond_wait(&smart_pthread_cond,&smart_pthread_mutex);
+	pthread_mutex_unlock(&smart_pthread_mutex);
+}
+//=======================================
+//智能线程执行任务
+void smart_pthread::do_job(){my_job->run();}
+//=======================================
+//智能线程完成任务
+void smart_pthread::finish_job(){
+	pthread_mutex_lock(&smart_pthread_mutex);
+	//清空任务
+	my_job=NULL;
+	//将智能线程移回线程池空闲队列
+	my_pthread_pool->move_smart_pthread_to_leisure_list(shared_ptr<smart_pthread>(this));
 	pthread_mutex_unlock(&smart_pthread_mutex);
 }
 //=======================================

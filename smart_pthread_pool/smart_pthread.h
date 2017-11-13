@@ -41,9 +41,9 @@ namespace smart_lib{
 			//智能线程等待分配任务
 			void wait();
 			//智能线程执行任务
-			void do_job(){}
+			void do_job();
 			//智能线程完成任务
-			void finish_job(){}
+			void finish_job();
 	};
 	//创建linux线程后的线程入口函数
 	void* thread_function(void* arg);
