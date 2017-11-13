@@ -19,7 +19,7 @@ namespace smart_lib{
 			//获取任务所分配的线程
 			shared_ptr<smart_pthread> get_pthread();
 			//执行任务，子类只要自己实现它，通过多态就能做不一样的事情了
-			virtual void *run(void *data)=0;
+			virtual void *run()=0;
 	};
 }
 //=======================================
