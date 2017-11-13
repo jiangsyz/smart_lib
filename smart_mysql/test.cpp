@@ -11,7 +11,7 @@ int main(){
 	db_connection_conf conf=db_connection_conf("host","user","pass","db","charset");
 	shared_ptr<smart_mysql> my_mysql=smart_mysql::get_instance(conf);
 	auto result=my_mysql->query("SELECT * FROM `customer` ORDER BY `id` DESC  LIMIT 0,50;");
-	cout<<result.flag<<endl;
+	cout<<result.state<<endl;
 	cout<<result.error<<endl;
 	cout<<result.rows<<endl;
 	cout<<result.cols<<endl;

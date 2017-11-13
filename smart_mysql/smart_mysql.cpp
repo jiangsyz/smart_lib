@@ -1,11 +1,15 @@
 #include "smart_mysql.h"
 using namespace smart_lib;
 //=======================================
-//初始化一个正确的结果集
-query_result::query_result(){flag=true;}
+//设置错误
+void query_result::set_error(int state,string error){
+	this->state=state;
+	this->error=error;
+}
 //=======================================
 //初始化一个错误的结果集
-query_result::query_result(string err_msg){error=err_msg;}
+query_result::query_result(int state,string error){this->set_error(state,error);}
+query_result::query_result(){}
 //=======================================
 //打印结果集
 void query_result::display(){for(auto e:results) cout<<e<<endl;}
@@ -61,9 +65,9 @@ shared_ptr<smart_mysql> smart_mysql::get_instance(db_connection_conf conf){
 //执行sql语句
 query_result smart_mysql::query(string sql){
 	//smart_mysql不可用,返回带有错误信息的query_result
-	if(state==0) return query_result("smart_mysql connection error");
-	if(state==1) return query_result("smart_mysql set charset error");
-	if(state!=2) return query_result("smart_mysql state error");
+	if(state==0) return query_result(-1,"smart_mysql connection error");
+	if(state==1) return query_result(-1,"smart_mysql set charset error");
+	if(state!=2) return query_result(-1,"smart_mysql state error");
 	//加锁
 	pthread_mutex_lock(&sql_mutex);
 	//执行sql
@@ -71,7 +75,7 @@ query_result smart_mysql::query(string sql){
 		//解锁
 		pthread_mutex_unlock(&sql_mutex);
 		//返回带有错误信息的query_result
-		return query_result(mysql_error(connection));
+		return query_result(-1,mysql_error(connection));
 	}
 	//初始化正确的query_result
 	query_result result=query_result();

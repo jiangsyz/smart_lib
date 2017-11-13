@@ -14,21 +14,20 @@ using namespace std;
 //=======================================
 namespace smart_lib{
 	//结果集
-	struct query_result
-	{
-		//结果集是否可用
-		bool flag{false};
-		//错误信息
+	struct query_result{
+		//结果集的状态(0=正常/<0错误码)
+		int state{0};
 		string error{""};
 		//结果集的行数和列数
 		int rows{0};
 		int cols{0};
 		//存放结果集的容器
 		vector<string> results;
-		//初始化一个正确的结果集
+		//设置错误
+		void set_error(int state,string error);
+		//初始化一个结果集
+		query_result(int state,string error);
 		query_result();
-		//初始化一个错误的结果集
-		query_result(string err_msg);
 		//打印结果集
 		void display();
 	};
