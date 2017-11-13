@@ -15,8 +15,8 @@ namespace smart_lib{
 		public:
 			//线程号
 			pthread_t thread_id{0};
-			//线程状态(-1=开辟错误,1=正常)
-			int state{1};
+			//线程状态(-1=linux线程开辟错误,0=正常)
+			int state{0};
 		private:
 			//是否接到退出命令(false=没接到/true=接到),接到该命令意味着线程池想销毁该智能线程
 			bool stop{false};

@@ -43,4 +43,4 @@ void smart_pthread::wait(){
 }
 //=======================================
 //创建linux线程后的线程入口函数
-void* thread_function(void* arg){((smart_pthread *)arg)->start();}
+void* smart_lib::thread_function(void* arg){((smart_pthread *)arg)->start();}

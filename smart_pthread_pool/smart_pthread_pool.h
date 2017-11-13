@@ -1,4 +1,6 @@
-//线程池
+/*
+智能线程池
+*/
 #ifndef SMART_PTHREAD_POOL_H
 #define SMART_PTHREAD_POOL_H
 #include <memory>
@@ -8,6 +10,13 @@ using namespace std;
 //=======================================
 namespace smart_lib{
 	class smart_pthread_pool{
+		public:
+			/*
+			线程状态(0=正常)
+			错误码:
+			-1=初始化智能线程错误
+			*/
+			int state{0};
 		private:
 			//当前线程池中所允许并发存在的线程的最大数目
 			unsigned int max{0};

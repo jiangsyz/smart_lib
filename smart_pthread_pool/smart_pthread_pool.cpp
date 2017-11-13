@@ -9,6 +9,8 @@ smart_pthread_pool::smart_pthread_pool(unsigned int max,unsigned int leisure_min
 	this->leisure_max=leisure_max;
 	pthread_mutex_init(&leisure_list_mutex,NULL);
 	pthread_cond_init( &leisure_cond,NULL);
+	//初始化一定数量的线程
+	for(int i=0;i<max;i++){if(add_smart_pthread()!=0) state=-1;}
 }
 //=======================================
 //析构
@@ -17,7 +19,7 @@ smart_pthread_pool::~smart_pthread_pool(){}
 //增加一个新的智能线程对象
 int smart_pthread_pool::add_smart_pthread(){
 	//线程数量超过上限制
-	if(max>=smart_pthread_num) return -1;
+	if(max<=smart_pthread_num) return -1;
 	//创建一个新的线程对象
 	shared_ptr<smart_pthread> new_pthread=shared_ptr<smart_pthread>(new smart_pthread(shared_ptr<smart_pthread_pool>(this)));
 	//把新的线程对象压入空闲队列
